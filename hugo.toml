@@ -1,4 +1,4 @@
-baseURL = 'https://keocheung.github.io/'
+baseURL = 'https://keocheung.github.io/blog/'
 languageCode = 'zh-Hans'
 title = "Keo Cheung's Blog"
 theme = 'paper'
