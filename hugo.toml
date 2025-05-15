@@ -1,0 +1,4 @@
+baseURL = 'https://keocheung.github.io/'
+languageCode = 'zh-Hans'
+title = "Keo Cheung's Blog"
+theme = 'paper'
