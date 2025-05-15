@@ -2,3 +2,10 @@ baseURL = 'https://keocheung.github.io/blog/'
 languageCode = 'zh-Hans'
 title = "Keo Cheung's Blog"
 theme = 'paper'
+
+[params]
+
+github = 'keocheung'
+twitter = 'Keo1248'
+mastodon = 'https://mona.do/web/@keo'
+rss = true
