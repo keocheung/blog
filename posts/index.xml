@@ -3,5 +3,9 @@
 &lt;p>文章的原始载体是Markdown文档，使用&lt;a href="https://gohugo.io/">Hugo&lt;/a>生成静态HTML页面，托管于&lt;a href="https://github.com/keocheung/blog">GitHub&lt;/a>上。&lt;/p>
 &lt;h3 id="关于排版">关于排版&lt;/h3>
 &lt;p>鉴于主流浏览器已经支持&lt;a href="https://caniuse.com/mdn-css_properties_text-autospace">CSS text-autospace&lt;/a>，本博客不会在西文和CJK字符之间添加空格，浏览器会自动添加中英文之间的间隔。&lt;/p>
-&lt;p>Google Chrome 119以上可以&lt;a href="chrome://flags/">在实验性功能&lt;/a>里打开&lt;a href="chrome://flags/#enable-experimental-web-platform-features">Experimental Web Platform features&lt;/a>，然后重启浏览器即可生效。&lt;/p>
-&lt;p>Safari 18.4以上已经原生支持，无需修改。&lt;/p></description></item></channel></rss>
+&lt;p>Google Chrome 119以上可以在&lt;a href="chrome://flags/">实验性功能&lt;/a>里打开&lt;a href="chrome://flags/#enable-experimental-web-platform-features">Experimental Web Platform features&lt;/a>，然后重启浏览器即可生效。&lt;/p>
+&lt;p>Safari 18.4以上已经原生支持，不需要用户手动开启功能，但需要网页开发者添加以下样式：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">body&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> text-autospace: &lt;span style="color:#66d9ef">normal&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>详情可参考&lt;a href="https://webkit.org/blog/16574/webkit-features-in-safari-18-4/#text-auto-space">WebKit的官方文章&lt;/a>，本博客的源站已经添加上述样式。&lt;/p></description></item></channel></rss>
