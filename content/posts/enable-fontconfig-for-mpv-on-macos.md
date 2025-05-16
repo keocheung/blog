@@ -30,7 +30,7 @@ mpv使用[libass](https://github.com/libass/libass)渲染SRT等纯文本字体�
 
 首先是可变字体，libass只能读取到最细的样式，`--sub-bold=yes`参数也无法生效（测试了Noto Sans CJK系列和Fira Code都是如此）。
 
-其次是字幕中的Emoji，libass无法显示，我猜是因为fallback到了一个彩色的Emoji字体，而libass只支持单色（monochrome）字体（[相关issue](https://github.com/libass/libass/issues/381)。
+其次是字幕中的Emoji，libass无法显示，我猜是因为fallback到了一个彩色的Emoji字体，而libass只支持单色（monochrome）字体（[相关issue](https://github.com/libass/libass/issues/381)）。
 
 查阅了资料发现libass在Linux上使用的Fontconfig也是支持macOS的，而Fontconfig有着丰富的自定义配置功能。抱着死马当活马医的想法，我试了试用Fontconfig替换掉CoreText，结果确实可以解决上述两个问题。
 
