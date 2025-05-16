@@ -28,9 +28,9 @@ mpv同时也是许多其他播放器的内置模块，比如[IINA](https://iina.
 
 mpv使用[libass](https://github.com/libass/libass)渲染SRT等纯文本字体，而libass在macOS上默认使用CoreText作为font provider读取字体，这带来了一些问题。
 
-首先是Noto Sans CJK系列字体的Super OTC格式，把所有地区的可变字体都放到一个文件里，极大地节省了体积，但libass只能读取到最细的样式。
+首先是可变字体，libass只能读取到最细的样式，`--sub-bold=yes`参数也无法生效（测试了Noto Sans CJK系列和Fira Code都是如此）。
 
-另外对于字幕中的Emoji，libass无法读取，我猜是因为fallback到了一个彩色的Emoji字体，而libass只支持单一颜色（monochrome）的字体。
+其次是字幕中的Emoji，libass无法显示，我猜是因为fallback到了一个彩色的Emoji字体，而libass只支持单色（monochrome）字体（[相关issue](https://github.com/libass/libass/issues/381)。
 
 查阅了资料发现libass在Linux上使用的Fontconfig也是支持macOS的，而Fontconfig有着丰富的自定义配置功能。抱着死马当活马医的想法，我试了试用Fontconfig替换掉CoreText，结果确实可以解决上述两个问题。
 
