@@ -12,6 +12,13 @@ title = '博客启动'
 ### 关于排版
 鉴于主流浏览器已经支持[CSS text-autospace](https://caniuse.com/mdn-css_properties_text-autospace)，本博客不会在西文和CJK字符之间添加空格，浏览器会自动添加中英文之间的间隔。
 
-Google Chrome 119以上可以[在实验性功能](chrome://flags/)里打开[Experimental Web Platform features](chrome://flags/#enable-experimental-web-platform-features)，然后重启浏览器即可生效。
+Google Chrome 119以上可以在[实验性功能](chrome://flags/)里打开[Experimental Web Platform features](chrome://flags/#enable-experimental-web-platform-features)，然后重启浏览器即可生效。
 
-Safari 18.4以上已经原生支持，无需修改。
+Safari 18.4以上已经原生支持，不需要用户手动开启功能，但需要网页开发者添加以下样式：
+
+```css
+body {
+    text-autospace: normal;
+}
+```
+详情可参考[WebKit的官方文章](https://webkit.org/blog/16574/webkit-features-in-safari-18-4/#text-auto-space)，本博客的源站已经添加上述样式。
