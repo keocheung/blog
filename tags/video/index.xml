@@ -40,4 +40,5 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/prefer&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/alias&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/fontconfig&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用的是monochrome的Emoji字体&lt;a href="https://fonts.google.com/noto/specimen/Noto+Emoji">Noto Emoji&lt;/a>&lt;/p></description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用的是monochrome的Emoji字体&lt;a href="https://fonts.google.com/noto/specimen/Noto+Emoji">Noto Emoji&lt;/a>。&lt;/p>
+&lt;p>最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用&lt;code>/opt/homebrew/lib/libass.9.dylib&lt;/code>替换掉各自包内的&lt;code>libass.9.dylib&lt;/code>。&lt;/p></description></item></channel></rss>
