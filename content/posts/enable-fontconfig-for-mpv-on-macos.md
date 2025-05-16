@@ -83,6 +83,6 @@ brew reinstall --build-from-source libass
 </fontconfig>
 ```
 
-这里使用的是monochrome的Emoji字体[Noto Emoji](https://fonts.google.com/noto/specimen/Noto+Emoji)
+这里使用的是monochrome的Emoji字体[Noto Emoji](https://fonts.google.com/noto/specimen/Noto+Emoji)。
 
-最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用`/opt/homebrew/lib/libass.9.dylib`替换掉各自包内的`libass.9.dylib`
+最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用`/opt/homebrew/lib/libass.9.dylib`替换掉各自包内的`libass.9.dylib`。
