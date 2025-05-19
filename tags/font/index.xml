@@ -43,8 +43,6 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用的是monochrome的Emoji字体&lt;a href="https://fonts.google.com/noto/specimen/Noto+Emoji">Noto Emoji&lt;/a>。&lt;/p>
 &lt;p>最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用&lt;code>/opt/homebrew/lib/libass.9.dylib&lt;/code>替换掉各自包内的&lt;code>libass.9.dylib&lt;/code>。&lt;/p>
 &lt;hr>
-&lt;p>本文章发布在以下多个网站：
-&lt;!-- raw HTML omitted -->
-&lt;a href="https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/">GitHub Pages&lt;/a>
-&lt;!-- raw HTML omitted -->
-&lt;a href="https://keo.xlog.app/enable-fontconfig-for-mpv-on-macosmd">xLog&lt;/a>（可评论）&lt;/p></description></item></channel></rss>
+&lt;p>本文章发布在以下多个网站：&lt;br>
+&lt;a href="https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/">GitHub Pages&lt;/a>&lt;br>
+&lt;a href="https://keo.xlog.app/enable-fontconfig-for-mpv-on-macos">xLog&lt;/a>（可评论）&lt;/p></description></item></channel></rss>
