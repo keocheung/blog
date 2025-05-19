@@ -46,7 +46,7 @@ brew install fontconfig
 
 Homebrew上的libass默认是不会在macOS上启用Fontconfig的，我们需要先修改编译脚本。
 
-最新版的Homebrew默认使用API的方式获取安装脚本，而不是克隆tap仓库，这里先暂时禁用API模式。
+最新版的Homebrew默认使用API的方式获取安装脚本，而不是克隆tap仓库，这会导致对安装脚本的修改无法生效，这里先暂时禁用API模式。
 
 ```bash
 export HOMEBREW_NO_INSTALL_FROM_API=1
@@ -86,3 +86,11 @@ brew reinstall --build-from-source libass
 这里使用的是monochrome的Emoji字体[Noto Emoji](https://fonts.google.com/noto/specimen/Noto+Emoji)。
 
 最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用`/opt/homebrew/lib/libass.9.dylib`替换掉各自包内的`libass.9.dylib`。
+
+---
+
+本文章发布在以下多个网站：
+<br>
+[GitHub Pages](https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/)
+<br>
+[xLog](https://keo.xlog.app/enable-fontconfig-for-mpv-on-macosmd)（可评论）
