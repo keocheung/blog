@@ -89,8 +89,6 @@ brew reinstall --build-from-source libass
 
 ---
 
-本文章发布在以下多个网站：
-<br>
-[GitHub Pages](https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/)
-<br>
-[xLog](https://keo.xlog.app/enable-fontconfig-for-mpv-on-macosmd)（可评论）
+本文章发布在以下多个网站：\
+[GitHub Pages](https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/)\
+[xLog](https://keo.xlog.app/enable-fontconfig-for-mpv-on-macos)（可评论）
