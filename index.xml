@@ -19,7 +19,7 @@
 &lt;p>首先安装Fontconfig：&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew install fontconfig
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Homebrew上的libass默认是不会在macOS上启用Fontconfig的，我们需要先修改编译脚本。&lt;/p>
-&lt;p>最新版的Homebrew默认使用API的方式获取安装脚本，而不是克隆tap仓库，这里先暂时禁用API模式。&lt;/p>
+&lt;p>最新版的Homebrew默认使用API的方式获取安装脚本，而不是克隆tap仓库，这会导致对安装脚本的修改无法生效，这里先暂时禁用API模式。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>export HOMEBREW_NO_INSTALL_FROM_API&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>brew update
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew edit libass
@@ -41,7 +41,13 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/alias&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/fontconfig&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用的是monochrome的Emoji字体&lt;a href="https://fonts.google.com/noto/specimen/Noto+Emoji">Noto Emoji&lt;/a>。&lt;/p>
-&lt;p>最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用&lt;code>/opt/homebrew/lib/libass.9.dylib&lt;/code>替换掉各自包内的&lt;code>libass.9.dylib&lt;/code>。&lt;/p></description></item><item><title>博客启动</title><link>https://keocheung.github.io/blog/posts/first/</link><pubDate>Fri, 16 May 2025 05:22:34 +0800</pubDate><guid>https://keocheung.github.io/blog/posts/first/</guid><description>&lt;p>最近因为一连串的各种事情，有了很多人生感悟，总算是想把博客这个事情捡起来了，争取以后多点记录，多点输出。&lt;/p>
+&lt;p>最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用&lt;code>/opt/homebrew/lib/libass.9.dylib&lt;/code>替换掉各自包内的&lt;code>libass.9.dylib&lt;/code>。&lt;/p>
+&lt;hr>
+&lt;p>本文章发布在以下多个网站：
+&lt;!-- raw HTML omitted -->
+&lt;a href="https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/">GitHub Pages&lt;/a>
+&lt;!-- raw HTML omitted -->
+&lt;a href="https://keo.xlog.app/enable-fontconfig-for-mpv-on-macosmd">xLog&lt;/a>（可评论）&lt;/p></description></item><item><title>博客启动</title><link>https://keocheung.github.io/blog/posts/first/</link><pubDate>Fri, 16 May 2025 05:22:34 +0800</pubDate><guid>https://keocheung.github.io/blog/posts/first/</guid><description>&lt;p>最近因为一连串的各种事情，有了很多人生感悟，总算是想把博客这个事情捡起来了，争取以后多点记录，多点输出。&lt;/p>
 &lt;h3 id="关于技术栈">关于技术栈&lt;/h3>
 &lt;p>文章的原始载体是Markdown文档，使用&lt;a href="https://gohugo.io/">Hugo&lt;/a>生成静态HTML页面，托管于&lt;a href="https://github.com/keocheung/blog">GitHub&lt;/a>上。&lt;/p>
 &lt;h3 id="关于排版">关于排版&lt;/h3>
