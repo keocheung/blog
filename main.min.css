@@ -1488,4 +1488,4 @@
 }@property --tw-ring-offset-shadow{syntax: "*";
   inherits: false;
   initial-value: 0 0 #0000;
-}@keyframes spin{to{transform:rotate(360deg)}}body{text-autospace:normal}
+}@keyframes spin{to{transform:rotate(360deg)}}body{text-autospace:normal}.space-x-10{ :where(& > :not(:last-child)) { margin-inline-end: 2rem; }}
