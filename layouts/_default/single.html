@@ -71,14 +71,18 @@
   </script>
   {{- end -}}
 
+  <!-- giscus -->
+  {{- $basePath := (urls.Parse .Site.BaseURL).Path -}}
+  {{- $relPath := strings.TrimPrefix $basePath .RelPermalink -}}
   <div class="mt-24"></div>
   <script src="https://giscus.app/client.js"
         data-repo="keocheung/blog"
         data-repo-id="R_kgDOOqyoMg"
         data-category="giscus"
         data-category-id="DIC_kwDOOqyoMs4Cq9Jw"
-        data-mapping="pathname"
-        data-strict="1"
+        data-mapping="specific"
+        data-term="{{- $relPath -}}"
+        data-strict="0"
         data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="bottom"
