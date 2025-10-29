@@ -1,48 +1,48 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Font on Keo Cheung's Blog</title><link>https://keocheung.github.io/blog/tags/font/</link><description>Recent content in Font on Keo Cheung's Blog</description><generator>Hugo</generator><language>zh-Hans</language><lastBuildDate>Fri, 16 May 2025 06:59:37 +0800</lastBuildDate><atom:link href="https://keocheung.github.io/blog/tags/font/index.xml" rel="self" type="application/rss+xml"/><item><title>在macOS上为mpv启用Fontconfig支持以解决若干字体问题</title><link>https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/</link><pubDate>Fri, 16 May 2025 06:59:37 +0800</pubDate><guid>https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/</guid><description>&lt;h2 id="前言">前言&lt;/h2>
-&lt;p>对视频播放有所研究的朋友应该都对&lt;a href="https://mpv.io/">mpv&lt;/a>这个功能丰富，配置灵活的播放器不陌生，其中的&lt;a href="https://mpv.io/manual/master/#conditional-auto-profiles">Conditional auto profiles&lt;/a>功能甚得我心，比如说你可以通过下面的配置实现不同语言的字幕使用不同的字体：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-ini" data-lang="ini">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">[zh-Hans]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">profile-cond&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">string.sub(get(&amp;#34;current-tracks/sub/lang&amp;#34;), 1, 7) == &amp;#34;zh-Hans&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">sub-font&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;Source Han Sans SC&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">[zh-Hant]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">profile-cond&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">string.sub(get(&amp;#34;current-tracks/sub/lang&amp;#34;), 1, 7) == &amp;#34;zh-Hant&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">sub-font&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;Source Han Sans HC&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>mpv同时也是许多其他播放器的内置模块，比如&lt;a href="https://iina.io/">IINA&lt;/a>和&lt;a href="https://github.com/jellyfin/jellyfin-media-player">Jellyfin Media Player&lt;/a>，这两个播放器也支持自定义的mpv配置。&lt;/p>
-&lt;p>关于mpv的更多配置项，可参考&lt;a href="https://vcb-s.com/archives/7594">VCB-S的入门教程&lt;/a>。&lt;/p>
-&lt;h2 id="问题">问题&lt;/h2>
-&lt;p>mpv使用&lt;a href="https://github.com/libass/libass">libass&lt;/a>渲染SRT等纯文本字体，而libass在macOS上默认使用CoreText作为font provider读取字体，这带来了一些问题。&lt;/p>
-&lt;p>首先是可变字体，libass只能读取到最细的样式，&lt;code>--sub-bold=yes&lt;/code>参数也无法生效（测试了Noto Sans CJK系列和Fira Code都是如此）。&lt;/p>
-&lt;p>其次是字幕中的Emoji，libass无法显示，我猜是因为fallback到了一个彩色的Emoji字体，而libass只支持单色（monochrome）字体（&lt;a href="https://github.com/libass/libass/issues/381">相关issue&lt;/a>）。&lt;/p>
-&lt;p>查阅了资料发现libass在Linux上使用的Fontconfig也是支持macOS的，而Fontconfig有着丰富的自定义配置功能。抱着死马当活马医的想法，我试了试用Fontconfig替换掉CoreText，结果确实可以解决上述两个问题。&lt;/p>
-&lt;h2 id="实操">实操&lt;/h2>
-&lt;p>以下使用Homebrew安装启用Fontconfig支持的libass。&lt;/p>
-&lt;p>首先安装Fontconfig：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew install fontconfig
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Homebrew上的libass默认是不会在macOS上启用Fontconfig的，我们需要先修改编译脚本。&lt;/p>
-&lt;p>最新版的Homebrew默认使用API的方式获取安装脚本，而不是克隆tap仓库，这会导致对安装脚本的修改无法生效，这里先暂时禁用API模式。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>export HOMEBREW_NO_INSTALL_FROM_API&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>brew update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew edit libass
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>把formula code里fontconfig相关的Linux条件删除，再删除&lt;code>--disable-fontconfig&lt;/code>参数，然后重新从源码安装libass：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew reinstall --build-from-source libass
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>到这一步Homebrew安装的mpv已经可以使用&lt;code>--sub-font-provider=fontconfig&lt;/code>参数来启用Fontconfig了。&lt;/p>
-&lt;p>修改&lt;code>~/.config/fontconfig/fonts.conf&lt;/code>，将mpv中使用的字体名设置为一系列字体的别名，就可以自定义fallback顺序了：&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34;?&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE fontconfig SYSTEM &amp;#34;/opt/homebrew/share/xml/fontconfig/fonts.dtd&amp;#34;&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;fontconfig&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;include&lt;/span> &lt;span style="color:#a6e22e">ignore_missing=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;yes&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>/opt/homebrew/etc/fonts/fonts.conf&lt;span style="color:#f92672">&amp;lt;/include&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;alias&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;family&amp;gt;&lt;/span>Source Han Sans HC&lt;span style="color:#f92672">&amp;lt;/family&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;prefer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;family&amp;gt;&lt;/span>Noto Sans CJK HK&lt;span style="color:#f92672">&amp;lt;/family&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;family&amp;gt;&lt;/span>Noto Emoji&lt;span style="color:#f92672">&amp;lt;/family&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/prefer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/alias&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/fontconfig&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里使用的是monochrome的Emoji字体&lt;a href="https://fonts.google.com/noto/specimen/Noto+Emoji">Noto Emoji&lt;/a>。&lt;/p>
-&lt;p>最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用&lt;code>/opt/homebrew/lib/libass.9.dylib&lt;/code>替换掉各自包内的&lt;code>libass.9.dylib&lt;/code>。&lt;/p>
-&lt;hr>
-&lt;p>本文章发布在以下网站：&lt;br>
-&lt;a href="https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/">GitHub Pages&lt;/a>&lt;br>
-&lt;a href="https://keo.xlog.app/enable-fontconfig-for-mpv-on-macos">xLog&lt;/a>&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Font on Keo Cheung's Blog</title><link>https://keocheung.github.io/blog/tags/font/</link><description>Recent content in Font on Keo Cheung's Blog</description><generator>Hugo</generator><language>zh-Hans</language><lastBuildDate>Fri, 16 May 2025 06:59:37 +0800</lastBuildDate><atom:link href="https://keocheung.github.io/blog/tags/font/index.xml" rel="self" type="application/rss+xml"/><item><title>在macOS上为mpv启用Fontconfig支持以解决若干字体问题</title><link>https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/</link><pubDate>Fri, 16 May 2025 06:59:37 +0800</pubDate><guid>https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/</guid><description>&lt;h2 id="前言"&gt;前言&lt;/h2&gt;
+&lt;p&gt;对视频播放有所研究的朋友应该都对&lt;a href="https://mpv.io/"&gt;mpv&lt;/a&gt;这个功能丰富，配置灵活的播放器不陌生，其中的&lt;a href="https://mpv.io/manual/master/#conditional-auto-profiles"&gt;Conditional auto profiles&lt;/a&gt;功能甚得我心，比如说你可以通过下面的配置实现不同语言的字幕使用不同的字体：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-ini" data-lang="ini"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[zh-Hans]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;profile-cond&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;string.sub(get(&amp;#34;current-tracks/sub/lang&amp;#34;), 1, 7) == &amp;#34;zh-Hans&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sub-font&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Source Han Sans SC&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;[zh-Hant]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;profile-cond&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;string.sub(get(&amp;#34;current-tracks/sub/lang&amp;#34;), 1, 7) == &amp;#34;zh-Hant&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sub-font&lt;/span&gt;&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;Source Han Sans HC&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;mpv同时也是许多其他播放器的内置模块，比如&lt;a href="https://iina.io/"&gt;IINA&lt;/a&gt;和&lt;a href="https://github.com/jellyfin/jellyfin-media-player"&gt;Jellyfin Media Player&lt;/a&gt;，这两个播放器也支持自定义的mpv配置。&lt;/p&gt;
+&lt;p&gt;关于mpv的更多配置项，可参考&lt;a href="https://vcb-s.com/archives/7594"&gt;VCB-S的入门教程&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id="问题"&gt;问题&lt;/h2&gt;
+&lt;p&gt;mpv使用&lt;a href="https://github.com/libass/libass"&gt;libass&lt;/a&gt;渲染SRT等纯文本字体，而libass在macOS上默认使用CoreText作为font provider读取字体，这带来了一些问题。&lt;/p&gt;
+&lt;p&gt;首先是可变字体，libass只能读取到最细的样式，&lt;code&gt;--sub-bold=yes&lt;/code&gt;参数也无法生效（测试了Noto Sans CJK系列和Fira Code都是如此）。&lt;/p&gt;
+&lt;p&gt;其次是字幕中的Emoji，libass无法显示，我猜是因为fallback到了一个彩色的Emoji字体，而libass只支持单色（monochrome）字体（&lt;a href="https://github.com/libass/libass/issues/381"&gt;相关issue&lt;/a&gt;）。&lt;/p&gt;
+&lt;p&gt;查阅了资料发现libass在Linux上使用的Fontconfig也是支持macOS的，而Fontconfig有着丰富的自定义配置功能。抱着死马当活马医的想法，我试了试用Fontconfig替换掉CoreText，结果确实可以解决上述两个问题。&lt;/p&gt;
+&lt;h2 id="实操"&gt;实操&lt;/h2&gt;
+&lt;p&gt;以下使用Homebrew安装启用Fontconfig支持的libass。&lt;/p&gt;
+&lt;p&gt;首先安装Fontconfig：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install fontconfig
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Homebrew上的libass默认是不会在macOS上启用Fontconfig的，我们需要先修改编译脚本。&lt;/p&gt;
+&lt;p&gt;最新版的Homebrew默认使用API的方式获取安装脚本，而不是克隆tap仓库，这会导致对安装脚本的修改无法生效，这里先暂时禁用API模式。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export HOMEBREW_NO_INSTALL_FROM_API&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew edit libass
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;把formula code里fontconfig相关的Linux条件删除，再删除&lt;code&gt;--disable-fontconfig&lt;/code&gt;参数，然后重新从源码安装libass：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew reinstall --build-from-source libass
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;到这一步Homebrew安装的mpv已经可以使用&lt;code&gt;--sub-font-provider=fontconfig&lt;/code&gt;参数来启用Fontconfig了。&lt;/p&gt;
+&lt;p&gt;修改&lt;code&gt;~/.config/fontconfig/fonts.conf&lt;/code&gt;，将mpv中使用的字体名设置为一系列字体的别名，就可以自定义fallback顺序了：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE fontconfig SYSTEM &amp;#34;/opt/homebrew/share/xml/fontconfig/fonts.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;fontconfig&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;include&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ignore_missing=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;yes&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;/opt/homebrew/etc/fonts/fonts.conf&lt;span style="color:#f92672"&gt;&amp;lt;/include&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;alias&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;family&amp;gt;&lt;/span&gt;Source Han Sans HC&lt;span style="color:#f92672"&gt;&amp;lt;/family&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;prefer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;family&amp;gt;&lt;/span&gt;Noto Sans CJK HK&lt;span style="color:#f92672"&gt;&amp;lt;/family&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;family&amp;gt;&lt;/span&gt;Noto Emoji&lt;span style="color:#f92672"&gt;&amp;lt;/family&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/prefer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/alias&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/fontconfig&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这里使用的是monochrome的Emoji字体&lt;a href="https://fonts.google.com/noto/specimen/Noto+Emoji"&gt;Noto Emoji&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;最后，IINA和Jellyfin Media Player使用的是自带的libmpv和libass，需要使用&lt;code&gt;/opt/homebrew/lib/libass.9.dylib&lt;/code&gt;替换掉各自包内的&lt;code&gt;libass.9.dylib&lt;/code&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;本文章发布在以下网站：&lt;br&gt;
+&lt;a href="https://keocheung.github.io/blog/posts/enable-fontconfig-for-mpv-on-macos/"&gt;GitHub Pages&lt;/a&gt;&lt;br&gt;
+&lt;a href="https://keo.xlog.app/enable-fontconfig-for-mpv-on-macos"&gt;xLog&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
