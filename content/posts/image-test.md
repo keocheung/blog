@@ -8,3 +8,6 @@ title: 'Image Test'
 
 ## AVIF Animation
 ![](https://files.catbox.moe/an2ifk.avif)
+
+## AV1 Loop Video
+{{< video src="https://files.catbox.moe/9vhddm.mp4" >}}
